@@ -17,7 +17,7 @@ class MovieCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(DetailScreen.routeName);
+        Navigator.of(context).pushNamed(DetailScreen.routeName, arguments: title);
       },
       child: Card(
 

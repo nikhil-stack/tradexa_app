@@ -10,11 +10,8 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
   TextEditingController controller = TextEditingController();
-  void searchMovies(BuildContext context) async{
-    Provider.of<Data>(
-      context,
-      listen: false,
-    ).getProducts(controller.text);
+  void searchMovies(BuildContext context) async {
+    Provider.of<Data>(context, listen: false).getProducts(controller.text);
   }
 
   @override
@@ -23,21 +20,39 @@ class _SearchBarState extends State<SearchBar> {
       leading: IconButton(
         icon: Icon(Icons.search),
         color: Colors.grey,
-        onPressed: () => searchMovies(context),
+        onPressed: () {
+          searchMovies(context);
+        },
       ),
       title: TextField(
+        textInputAction: TextInputAction.go,
         controller: controller,
         decoration: InputDecoration(
           hintText: 'Enter movie name to search',
           hintStyle: TextStyle(color: Colors.white),
         ),
         style: TextStyle(color: Colors.white),
+        onSubmitted: (value) {
+                    Provider.of<Data>(context, listen: false).clearProducts();
+
+          searchMovies(context);
+          
+        },
       ),
       tileColor: Color(0xFF210F37),
-      trailing: InkWell(child: Image.asset('assets/images/cancel.png', width: 40,),onTap: () {
-      setState(() {
+      trailing: InkWell(
+        child: Image.asset(
+          'assets/images/cancel.png',
+          width: 40,
+        ),
+        onTap: () {
+          setState(
+            () {
               controller.clear();
-            },);},),);
-      
+            },
+          );
+        },
+      ),
+    );
   }
 }

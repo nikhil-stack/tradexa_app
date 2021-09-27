@@ -11,7 +11,8 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loadedMovie = Provider.of<Data>(context).items[0];
+    final argument = ModalRoute.of(context).settings.arguments;
+    final loadedMovie = Provider.of<Data>(context).items.firstWhere((element) => element.title == argument);
     return Scaffold(
       backgroundColor: Color(0xFF17082A),
       body: SingleChildScrollView(
@@ -174,7 +175,7 @@ class DetailScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if(loadedMovie.ratings.length == 2)
+                    if(loadedMovie.ratings.length > 1)
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: Row(
@@ -193,7 +194,7 @@ class DetailScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if(loadedMovie.ratings.length == 2)
+                    if(loadedMovie.ratings.length > 2)
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: Row(
@@ -428,23 +429,26 @@ class DetailScreen extends StatelessWidget {
                           shrinkWrap: true,
                           itemBuilder: (ctx, index) => Row(
                                 children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(20),
+                                        ),
+                                        color: Colors.deepPurple.shade900,
                                       ),
-                                      color: Colors.deepPurple.shade900,
-                                    ),
-                                    margin: EdgeInsets.symmetric(vertical: 5),
-                                    padding: EdgeInsets.all(10),
-                                    child: Text(
-                                      loadedMovie.writer.split(',')[index],
-                                      style: TextStyle(
-                                        color: Colors.white,
+                                      margin: EdgeInsets.symmetric(vertical: 5),
+                                      padding: EdgeInsets.all(10),
+                                      child:Text(
+                                          loadedMovie.writer.split(',')[index],
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                          textAlign: TextAlign.start,
+                                        ),
                                       ),
-                                      textAlign: TextAlign.start,
                                     ),
-                                  ),
+                                
                                   Spacer(),
                                 ],
                               ),

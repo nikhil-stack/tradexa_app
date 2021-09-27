@@ -10,28 +10,70 @@ class Data with ChangeNotifier {
     return [..._items];
   }
 
+  void clearProducts() {
+    _items.clear();
+    notifyListeners();
+  }
+
   void getProducts(String title) async {
-    final url = Uri.parse('https://www.omdbapi.com/?apikey=685b6445&t=$title');
+    final url = Uri.parse('https://www.omdbapi.com/?apikey=685b6445&s=$title');
     final response = await http.post(url);
-    final responseData = json.decode(response.body);
-    _items.insert(
-      0,
-      Details(
-        imageUrl: responseData['Poster'],
-        actors: responseData['Actors'],
-        country: responseData['Country'],
-        director: responseData['Director'],
-        genre: responseData['Genre'],
-        imdbRating: responseData['imdbRating'],
-        language: responseData['Language'],
-        plot: responseData['Plot'],
-        ratings: responseData['Ratings'],
-        runtime: responseData['Runtime'],
-        title: responseData['Title'],
-        year: responseData['Year'],
-        writer: responseData['Writer'],
-      ),
-    );
+    final responseData = await json.decode(response.body)['Search'] as List<dynamic>;
+    //print(responseData);
+    responseData.forEach((element) async {
+      //imdbId.add(element["imdbID"]);
+      final id = element['imdbID'];
+      final url2 = Uri.parse('https://www.omdbapi.com/?apikey=685b6445&i=$id');
+      final response2 = await http.post(url2);
+      final responseData2 =
+          await json.decode(response2.body) as Map<dynamic, dynamic>;
+      print(responseData2);
+      _items.add(
+        Details(
+          imageUrl: responseData2['Poster'],
+          actors: responseData2['Actors'],
+          country: responseData2['Country'],
+          director: responseData2['Director'],
+          genre: responseData2['Genre'],
+          imdbRating: responseData2['imdbRating'],
+          language: responseData2['Language'],
+          plot: responseData2['Plot'],
+          ratings: responseData2['Ratings'],
+          runtime: responseData2['Runtime'],
+          title: responseData2['Title'],
+          year: responseData2['Year'],
+          writer: responseData2['Writer'],
+        ),
+      );
+    });
+    /*imdbId.forEach(
+      (element) async {
+        final url2 =
+            Uri.parse('https://www.omdbapi.com/?apikey=685b6445&i=$element');
+        final response2 = await http.post(url2);
+        final responseData2 =
+            json.decode(response2.body) as Map<dynamic, dynamic>;
+        print(responseData2);
+        _items.insert(
+          0,
+          Details(
+            imageUrl: responseData2['Poster'],
+            actors: responseData2['Actors'],
+            country: responseData2['Country'],
+            director: responseData2['Director'],
+            genre: responseData2['Genre'],
+            imdbRating: responseData2['imdbRating'],
+            language: responseData2['Language'],
+            plot: responseData2['Plot'],
+            ratings: responseData2['Ratings'],
+            runtime: responseData2['Runtime'],
+            title: responseData2['Title'],
+            year: responseData2['Year'],
+            writer: responseData2['Writer'],
+          ),
+        );
+      },*/
+
     notifyListeners();
   }
 }
